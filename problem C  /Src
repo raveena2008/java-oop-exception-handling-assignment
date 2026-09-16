@@ -1,0 +1,39 @@
+from abc import ABC, abstractmethod
+# Abstract Base Class acting as the Payable Interface
+class Payable(ABC):
+
+  @abstractmethod
+  def calculate_charge(self) -> float:
+    pass
+
+
+# Implementation handling division by zero
+class StandardRental(Payable):
+
+  def __init__(self, rental_days: int, total_cost: float):
+    self.rental_days = rental_days
+    self.total_cost = total_cost
+
+  def calculate_charge(self) -> float:
+    try:
+      # Computing daily rate: total_cost / rental_days
+      return self.total_cost / self.rental_days
+    except ZeroDivisionError:
+      print(
+          "Error: Cannot compute daily rate with 0 rental days (Division by"
+          " zero)."
+      )
+      return 0.0
+
+
+# --- Test Case 1: Zero rental days ---
+print("--- Test 1: Zero Rental Days ---")
+invalid_rental = StandardRental(rental_days=0, total_cost=200.0)
+charge1 = invalid_rental.calculate_charge()
+print(f"Resulting Charge: ${charge1:.2f}\n")
+
+# --- Test Case 2: Valid rental days ---
+print("--- Test 2: Valid Rental Days ---")
+valid_rental = StandardRental(rental_days=5, total_cost=200.0)
+charge2 = valid_rental.calculate_charge()
+print(f"Resulting Charge: ${charge2:.2f}/day")
